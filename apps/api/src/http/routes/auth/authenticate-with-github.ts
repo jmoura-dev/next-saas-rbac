@@ -1,11 +1,10 @@
 import { env } from '@saas/env'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
-import z from 'zod'
+import { z } from 'zod'
 
+import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
 import { prisma } from '@/lib/prisma'
-
-import { BadRequestError } from '../_errors/bad-request-error'
 
 export async function authenticateWithGithub(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -13,9 +12,9 @@ export async function authenticateWithGithub(app: FastifyInstance) {
     {
       schema: {
         tags: ['auth'],
-        summary: 'Authenticate with Github',
+        summary: 'Authenticate with GitHub',
         body: z.object({
-          code: z.string(),
+          code: z.coerce.string(),
         }),
         response: {
           201: z.object({
@@ -42,6 +41,8 @@ export async function authenticateWithGithub(app: FastifyInstance) {
       )
       githubOAuthURL.searchParams.set('code', code)
 
+      console.log(githubOAuthURL, 'github')
+
       const githubAccessTokenResponse = await fetch(githubOAuthURL, {
         method: 'POST',
         headers: {
@@ -57,7 +58,7 @@ export async function authenticateWithGithub(app: FastifyInstance) {
           token_type: z.literal('bearer'),
           scope: z.string(),
         })
-        .parse(githubAccessTokenData)
+        .parse(githubAccessTokenData) // Error
 
       const githubUserResponse = await fetch('https://api.github.com/user', {
         headers: {
@@ -69,9 +70,9 @@ export async function authenticateWithGithub(app: FastifyInstance) {
 
       const {
         id: githubId,
-        avatar_url: avatarUrl,
         name,
         email,
+        avatar_url: avatarUrl,
       } = z
         .object({
           id: z.number().int().transform(String),
@@ -83,7 +84,7 @@ export async function authenticateWithGithub(app: FastifyInstance) {
 
       if (email === null) {
         throw new BadRequestError(
-          'Your Github account must have an e-mail to authenticate',
+          'Your GitHub account must have an email to authenticate.',
         )
       }
 
@@ -94,8 +95,8 @@ export async function authenticateWithGithub(app: FastifyInstance) {
       if (!user) {
         user = await prisma.user.create({
           data: {
-            name,
             email,
+            name,
             avatarUrl,
           },
         })

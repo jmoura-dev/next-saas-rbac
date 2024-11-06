@@ -32,9 +32,7 @@ export async function signInWithEmailAndPassword(data: FormData) {
       password,
     })
 
-    const cookieStore = await cookies()
-
-    cookieStore.set('token', token, {
+    cookies().set('token', token, {
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
