@@ -17,8 +17,6 @@ export async function GET(request: NextRequest) {
 
   const { token } = await signInWithGithub({ code })
 
-  console.log(token, 'aqui')
-
   cookies().set('token', token, {
     path: '/',
     maxAge: 60 * 60 * 24 * 7, // 7 days
@@ -27,6 +25,7 @@ export async function GET(request: NextRequest) {
   const redirectUrl = request.nextUrl.clone()
 
   redirectUrl.pathname = '/'
+  redirectUrl.search = ''
 
   return NextResponse.redirect(redirectUrl)
 }
