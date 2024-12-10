@@ -33,11 +33,13 @@ export async function ProfileButton() {
           <span className="text-sm font-medium">{capitalizedUserName}</span>
           <span className="text-xs text-muted-foreground">{user.email}</span>
         </div>
-        <Avatar>
+        <Avatar className="size-8">
           {user.avatarUrl && <AvatarImage src={user.avatarUrl} />}
 
           {user.name && (
-            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+            <AvatarFallback className="size-8">
+              {getInitials(user.name)}
+            </AvatarFallback>
           )}
         </Avatar>
         <ChevronDown className="size-4 text-muted-foreground" />
