@@ -1,5 +1,10 @@
 const nextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      { hostname: 'github.com' },
+      { hostname: 'avatars.githubusercontent.com' },
+    ],
+  },
 }
 
 export default nextConfig
