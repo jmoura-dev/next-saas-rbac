@@ -47,11 +47,11 @@ Roles & permissions.
 
 ### Roles
 
-- Owner (count as administrator)
-- Administrator
-- Member
-- Billing (one per organization)
-- Anonymous
+- Owner (count as administrator);
+- Administrator;
+- Member;
+- Billing (one per organization);
+- Anonymous;
 
 ### Permissions table
 
